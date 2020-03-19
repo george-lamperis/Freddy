@@ -28,7 +28,12 @@ extension JSON {
     /// - throws: Errors that arise from `JSONSerialization`.
     /// - see: Foundation.JSONSerialization
     public func serialize(options: SerializeOptions = []) throws -> Data {
-        return try JSONSerialization.data(withJSONObject: toJSONSerializationValue(options: options), options: [])
+        if #available(iOSApplicationExtension 11.0, *) {
+            return try JSONSerialization.data(withJSONObject: toJSONSerializationValue(options: options), options: [.sortedKeys])
+        } else {
+            // Fallback on earlier versions, sortedKeys option unavailable
+            return try JSONSerialization.data(withJSONObject: toJSONSerializationValue(options: options), options: [])
+        }
     }
     
     /// Attempt to serialize `JSON` into a `String`.

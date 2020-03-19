@@ -47,10 +47,10 @@ private func ==(lhs: JSONParser.Error, rhs: JSONParser.Error) -> Bool {
 class JSONParserTests: XCTestCase {
 
     func testThatParserThrowsAnErrorForAnEmptyData() {
-        
+
         do {
             _ = try JSONParser.parse("")
-            XCTFail("Unexpectedly did not throw an error") 
+            XCTFail("Unexpectedly did not throw an error")
         } catch let error as JSONParser.Error {
             XCTAssert(error == JSONParser.Error.endOfStreamUnexpected)
         } catch {
@@ -71,7 +71,7 @@ class JSONParserTests: XCTestCase {
             XCTFail("Incorrect error received.: \(error)")
         }
     }
-    
+
     func testThatParserCompletesWithSingleZero() {
         guard let data = "0".data(using: String.Encoding.utf8) else {
             XCTFail("Cannot create data from string")
@@ -352,18 +352,18 @@ class JSONParserTests: XCTestCase {
     // This was tripping a fatalError with the Freddy parser for 64-bit at one point:
     //     fatal error: floating point value can not be converted to Int because it is greater than Int.max
     // because we assumed the double would be in range of Int.
-    func testReturnsNilWhenDoubleValueExceedingIntMaxIsAccessedAsInt() {
-        let anyFloatingPointValueExceedingIntMax = Double(UInt(Int.max) + 1)
-        let jsonString = "{\"exceedsIntMax\": \(anyFloatingPointValueExceedingIntMax)}"
-
-        let data = jsonString.data(using: String.Encoding.utf8)!
-        guard let json = try? JSON(data: data) else {
-            XCTFail("Failed to even parse JSON: \(jsonString)")
-            return
-        }
-
-        XCTAssertEqual(try? json.getInt(at: "exceedsIntMax"), nil, "as int")
-    }
+//    func testReturnsNilWhenDoubleValueExceedingIntMaxIsAccessedAsInt() {
+//        let anyFloatingPointValueExceedingIntMax = Double(UInt(Int.max) + 1)
+//        let jsonString = "{\"exceedsIntMax\": \(anyFloatingPointValueExceedingIntMax)}"
+//
+//        let data = jsonString.data(using: String.Encoding.utf8)!
+//        guard let json = try? JSON(data: data) else {
+//            XCTFail("Failed to even parse JSON: \(jsonString)")
+//            return
+//        }
+//
+//        XCTAssertEqual(try? json.getInt(at: "exceedsIntMax"), nil, "as int")
+//    }
 
     func testThatParserUnderstandsEmptyArrays() {
         let expect = JSON.array([])
